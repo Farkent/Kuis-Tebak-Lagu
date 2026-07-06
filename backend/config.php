@@ -5,14 +5,19 @@
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-// Baca URL frontend dari environment variable Railway
-// Set FRONTEND_URL di Railway dashboard (contoh: https://xxx.vercel.app)
+// Baca URL frontend dari Environment Variable Railway (opsional)
 $frontendUrl = getenv('FRONTEND_URL') ?: '';
 
 $allowedOrigins = array_filter([
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    $frontendUrl,   // URL Vercel dari Railway env var
+
+    // URL Frontend Vercel
+    "https://kuis-tebak-lagu-oh1ztimy4-farrel-kent-r.vercel.app",
+
+    // Jika nanti menggunakan custom domain atau Production Domain Vercel,
+    // cukup tambahkan di Railway Environment Variable FRONTEND_URL
+    $frontendUrl,
 ]);
 
 if (in_array($origin, $allowedOrigins, true)) {
@@ -25,6 +30,7 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
     exit;
 }
 
@@ -41,7 +47,6 @@ session_set_cookie_params([
 ]);
 
 session_start();
-
 
 // ==============================
 // DATABASE RAILWAY
