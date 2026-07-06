@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PageTransition from "./components/Pagetransition";
+import PageTransition from "./components/PageTransition";
 import Home from "./pages/Home";
 import TebakLagu from "./pages/TebakLagu";
 import Result from "./pages/Result";
