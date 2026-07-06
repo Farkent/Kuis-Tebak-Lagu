@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+/* neobrutalism-global.css
+   Import/add this into your index.css or App.css.
+   Also import a monospace font — e.g. from Google Fonts:*/
+
+   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+   /*Then set font-mono in tailwind to Space Mono (tailwind.config.js):
+     theme: {
+       extend: {
+         fontFamily: {
+           mono: ['"Space Mono"', 'Courier New', 'monospace'],
+         },
+       },
+     },
+*/
+   /*IMPORTANT: Add border-3 and border-b-3 support in tailwind.config.js:
+     theme: {
+       extend: {
+         borderWidth: {
+           '3': '3px',
+         },
+       },
+     },
+*/
+
+/* ── Page Transition ── */
+/* Used by PageTransition.jsx — no extra CSS needed (inline styles) */
+
+/* ── Focus Ring ── */
+:focus-visible {
+  outline: 4px solid #FFE600;
+  outline-offset: 2px;
+}
+
+/* ── Selection ── */
+::selection {
+  background: #FFE600;
+  color: #000;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #1a1a1a; }
+::-webkit-scrollbar-thumb { background: #FFE600; border: 2px solid #000; }
+
+/* ── Audio element ── */
+audio::-webkit-media-controls-panel { background: #1a1a1a; }
+
+/* ── Utility: border-3 (if Tailwind JIT doesn't support it) ── */
+.border-3 { border-width: 3px; }
+.border-b-3 { border-bottom-width: 3px; }
+.border-t-3 { border-top-width: 3px; }
+.border-r-3 { border-right-width: 3px; }
+
+/* ── Neobrutalism button press effect (add class "nb-btn" optionally) ── */
+.nb-btn:active {
+  transform: translate(3px, 3px) !important;
+  box-shadow: none !important;
+}
+
+/* ── Leaderboard dark scrollable ── */
+.lb-scroll {
+  scrollbar-color: #FFE600 #1a1a1a;
+}
+
+/* Notification animations */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(400px) rotate(2deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg);
+  }
+}
+
+.animate-notification {
+  animation: slideInRight 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Smooth Fade-In and Slide-Up Transitions ── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
