@@ -1,17 +1,12 @@
 FROM php:8.2-apache
 
-# Install mysqli extension
+# Install ekstensi mysqli
 RUN docker-php-ext-install mysqli
 
-# Aktifkan Apache Rewrite
-RUN a2enmod rewrite
+# Copy seluruh source code
+COPY . /var/www/html
 
-# Salin seluruh project ke Apache
-COPY . /var/www/html/
-
-# Permission
+# Set permission
 RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 80
-
-CMD ["apache2-foreground"]
