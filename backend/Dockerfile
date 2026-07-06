@@ -1,12 +1,12 @@
-FROM php:8.2-apache
+FROM php:8.2-cli
 
-# Install ekstensi mysqli
+# Install mysqli
 RUN docker-php-ext-install mysqli
 
-# Copy seluruh source code
-COPY . /var/www/html
+WORKDIR /app
 
-# Set permission
-RUN chown -R www-data:www-data /var/www/html
+COPY . .
 
-EXPOSE 80
+EXPOSE 8080
+
+CMD ["sh", "-c", "php -S 0.0.0.0:${PORT:-8080}"]
