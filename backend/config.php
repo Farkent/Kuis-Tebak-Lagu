@@ -13,7 +13,7 @@ $allowedOrigins = array_filter([
     "http://127.0.0.1:5173",
 
     // URL Frontend Vercel
-    "https://kuis-tebak-lagu-oh1ztimy4-farrel-kent-r.vercel.app",
+    "https://kuis-tebak-lagu.vercel.app/",
 
     // Jika nanti menggunakan custom domain atau Production Domain Vercel,
     // cukup tambahkan di Railway Environment Variable FRONTEND_URL
