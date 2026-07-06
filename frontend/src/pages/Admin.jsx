@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import NotificationPopup from "../components/NotificationPopup";
-import ConfirmationDialog from "../components/Confirmationdialog";
+import ConfirmationDialog from "../components/ConfirmationDialog";
 import { apiUrl } from "../api";
 
 const emptySong = {
