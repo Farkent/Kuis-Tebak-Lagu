@@ -277,7 +277,14 @@ export default function TebakLagu() {
       {/* Audio element - hidden but active */}
       <audio
         ref={audioRef}
+        crossOrigin="anonymous"
+        preload="auto"
         onEnded={handleAudioEnded}
+        onError={(e) => {
+          console.log("AUDIO ERROR");
+          console.log(audioRef.current.error);
+          console.log(audioRef.current.src);
+        }}
       />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
