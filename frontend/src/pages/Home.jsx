@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
+import { apiUrl } from "../api";
 
 // Neobrutalism card accent colors (bg, border accent, text accent)
 const CARD_COLORS = [
@@ -19,7 +20,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/dapatkan_tebak_lagu.php")
+    fetch(apiUrl("/dapatkan_tebak_lagu.php"))
       .then((res) => res.json())
       .then((data) => setTebakLagu(data))
       .finally(() => setLoading(false));

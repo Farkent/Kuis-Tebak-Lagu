@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import NotificationPopup from "../components/NotificationPopup";
 import ConfirmationDialog from "../components/Confirmationdialog";
+import { apiUrl } from "../api";
 
 const emptySong = {
   lagu_id: 0, lirik: "", deezer_track_id: 0, preview_url: "", genre_id: "",
@@ -135,7 +136,7 @@ export default function Admin() {
   };
 
   useEffect(() => {
-    fetch("/api/is_admin.php", { credentials: "include" })
+    fetch(apiUrl("/is_admin.php"), { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (!data.authenticated) navigate("/admin");
@@ -167,16 +168,16 @@ export default function Admin() {
     setEditingSong(emptySong);
   }, [selectedCategoryId, categories]);
 
-  const loadCategories = () => fetch("/api/dapatkan_tebak_lagu.php", { credentials: "include" }).then((r) => r.json()).then(setCategories);
-  const loadGenres = () => fetch("/api/genre_manager.php").then((r) => r.json()).then((d) => setGenres(Array.isArray(d) ? d : []));
-  const loadSongs = (cid) => fetch(`/api/dapatkan_lagu.php?tebak_lagu_id=${cid}`, { credentials: "include" }).then((r) => r.json()).then((d) => setSongs(Array.isArray(d) ? d : []));
+  const loadCategories = () => fetch(apiUrl("/dapatkan_tebak_lagu.php"), { credentials: "include" }).then((r) => r.json()).then(setCategories);
+  const loadGenres = () => fetch(apiUrl("/genre_manager.php")).then((r) => r.json()).then((d) => setGenres(Array.isArray(d) ? d : []));
+  const loadSongs = (cid) => fetch(apiUrl(`/dapatkan_lagu.php?tebak_lagu_id=${cid}`), { credentials: "include" }).then((r) => r.json()).then((d) => setSongs(Array.isArray(d) ? d : []));
 
   // ════════════════════════════════════════════════════════════
   // Load leaderboard data
   // ════════════════════════════════════════════════════════════
   const loadLeaderboard = () => {
     setLeaderboardLoading(true);
-    fetch("/api/dapatkan_leaderboard.php", { credentials: "include" })
+    fetch(apiUrl("/dapatkan_leaderboard.php"), { credentials: "include" })
       .then((r) => r.json())
       .then((d) => {
         if (Array.isArray(d)) setLeaderboardData(d);
@@ -195,7 +196,7 @@ export default function Admin() {
       message: `Skor ${playerName} akan dihapus dari leaderboard. TIDAK BISA DI-UNDO!`,
       confirmText: "YA, HAPUS",
       action: () => {
-        fetch("/api/dapatkan_leaderboard.php", {
+        fetch(apiUrl("/dapatkan_leaderboard.php"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "delete_result", result_id: resultId }),
@@ -221,7 +222,7 @@ export default function Admin() {
   const deleteAllPlayerScores = (playerName) => {
     if (!confirm(`Hapus SEMUA skor ${playerName} di semua kategori?\n\n⚠️ TIDAK BISA DI-UNDO!`)) return;
 
-    fetch("/api/dapatkan_leaderboard.php", {
+    fetch(apiUrl("/dapatkan_leaderboard.php"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "delete_player", nama_pemain: playerName, confirm: true }),
@@ -247,7 +248,7 @@ export default function Admin() {
       message: `Semua skor di kategori "${categoryTitle}" akan dihapus. TIDAK BISA DI-UNDO!`,
       confirmText: "YA, RESET",
       action: () => {
-        fetch("/api/dapatkan_leaderboard.php", {
+        fetch(apiUrl("/dapatkan_leaderboard.php"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -281,7 +282,7 @@ export default function Admin() {
       confirmText: "🗑️ RESET SEMUA!",
       cancelText: "BATAL",
       action: () => {
-        fetch("/api/dapatkan_leaderboard.php", {
+        fetch(apiUrl("/dapatkan_leaderboard.php"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "reset_all", confirm: true }),
@@ -303,7 +304,7 @@ export default function Admin() {
 
   const saveGenre = () => {
     if (!newGenre.trim()) return showNotification("ERROR: Nama genre tidak boleh kosong!", "error");
-    fetch("/api/genre_manager.php", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: editingGenreId, nama_genre: newGenre }) })
+    fetch(apiUrl("/genre_manager.php"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: editingGenreId, nama_genre: newGenre }) })
       .then(() => { showNotification(editingGenreId ? "GENRE DIPERBARUI!" : "GENRE DITAMBAHKAN!", "success"); setNewGenre(""); setEditingGenreId(null); loadGenres(); });
   };
 
@@ -313,7 +314,7 @@ export default function Admin() {
       title: "HAPUS GENRE?",
       message: "Genre ini akan dihapus secara permanen. TIDAK BISA DI-UNDO!",
       action: () => {
-        fetch(`/api/genre_manager.php?id=${id}`, { method: "DELETE" })
+        fetch(apiUrl(`/genre_manager.php?id=${id}`), { method: "DELETE" })
           .then(() => {
             showNotification("GENRE DIHAPUS!", "success");
             loadGenres();
@@ -324,7 +325,7 @@ export default function Admin() {
   };
 
   const saveCategory = () => {
-    fetch("/api/simpan_tebak_lagu.php", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: selectedCategoryId || 0, title: categoryTitle, description: categoryDescription }), credentials: "include" })
+    fetch(apiUrl("/simpan_tebak_lagu.php"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: selectedCategoryId || 0, title: categoryTitle, description: categoryDescription }), credentials: "include" })
       .then(() => { showNotification(selectedCategoryId ? "KATEGORI DIPERBARUI!" : "KATEGORI DITAMBAHKAN!", "success"); loadCategories(); });
   };
 
@@ -338,7 +339,7 @@ export default function Admin() {
       message: "Menghapus kategori akan menghapus SEMUA soal yang terhubung. TIDAK BISA DI-UNDO!",
       confirmText: "YA, HAPUS SEMUA",
       action: () => {
-        fetch("/api/hapus_tebak_lagu.php", {
+        fetch(apiUrl("/hapus_tebak_lagu.php"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: selectedCategoryId }),
@@ -364,7 +365,7 @@ export default function Admin() {
     if (!editingSong.genre_id) return showNotification("ERROR: Pilih genre terlebih dahulu!", "error");
     const isEdit = editingSong.lagu_id !== 0;
     const payload = { lagu_id: editingSong.lagu_id, tebak_lagu_id: selectedCategoryId, lirik: editingSong.lirik, deezer_track_id: editingSong.deezer_track_id, preview_url: editingSong.preview_url, genre_id: editingSong.genre_id, jawaban: editingSong.jawaban };
-    fetch("/api/simpan_lagu.php", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), credentials: "include" })
+    fetch(apiUrl("/simpan_lagu.php"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), credentials: "include" })
       .then((r) => r.json()).then((d) => {
         if (d.error) throw new Error(d.error);
         showNotification(isEdit ? "SOAL DIPERBARUI!" : "SOAL DITAMBAHKAN!", "success");
@@ -377,7 +378,7 @@ export default function Admin() {
       title: "HAPUS SOAL?",
       message: "Soal ini akan dihapus. TIDAK BISA DI-UNDO!",
       action: () => {
-        fetch("/api/hapus_lagu.php", {
+        fetch(apiUrl("/hapus_lagu.php"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ lagu_id: id }),
@@ -396,7 +397,7 @@ export default function Admin() {
     if (!searchQuery.trim()) return;
     setSearchLoading(true);
     try {
-      const res = await fetch(`/api/search_deezer.php?q=${encodeURIComponent(searchQuery)}`);
+      const res = await fetch(apiUrl(`/search_deezer.php?q=${encodeURIComponent(searchQuery)}`));
       setSearchResults(await res.json());
     } catch { showNotification("ERROR: Gagal terhubung ke Deezer API", "error"); }
     finally { setSearchLoading(false); }
@@ -408,7 +409,7 @@ export default function Admin() {
   };
 
   const handleLogout = () => {
-    fetch("/api/logout.php", { credentials: "include" }).then((r) => r.json()).then((d) => {
+    fetch(apiUrl("/logout.php"), { credentials: "include" }).then((r) => r.json()).then((d) => {
       if (d.success) { sessionStorage.removeItem("login_notified"); showNotification("LOGOUT BERHASIL!", "success"); setTimeout(() => navigate("/admin"), 1200); }
     }).catch(() => navigate("/admin"));
   };
@@ -689,7 +690,7 @@ export default function Admin() {
                           <NbBtn
                             onClick={() => {
                               const id = editingSong.lagu_id; setEditingSong(emptySong);
-                              fetch("/api/hapus_lagu.php", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ lagu_id: id }), credentials: "include" })
+                              fetch(apiUrl("/hapus_lagu.php"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ lagu_id: id }), credentials: "include" })
                                 .then(() => { showNotification("SOAL DIHAPUS!", "success"); loadSongs(selectedCategoryId); });
                             }}
                             color="#FF2D78" textColor="white" shadow="#000" className="flex-1 justify-center"

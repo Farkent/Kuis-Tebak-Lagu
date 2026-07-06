@@ -5,10 +5,15 @@
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-$allowedOrigins = [
+// Baca URL frontend dari environment variable Railway
+// Set FRONTEND_URL di Railway dashboard (contoh: https://xxx.vercel.app)
+$frontendUrl = getenv('FRONTEND_URL') ?: '';
+
+$allowedOrigins = array_filter([
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-];
+    $frontendUrl,   // URL Vercel dari Railway env var
+]);
 
 if (in_array($origin, $allowedOrigins, true)) {
     header("Access-Control-Allow-Origin: $origin");

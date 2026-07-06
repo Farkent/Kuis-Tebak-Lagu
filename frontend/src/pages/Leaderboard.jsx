@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { apiUrl } from "../api";
 
 const RANK_STYLES = {
   1: { bg: "#FFE600", shadow: "#FF2D78", label: "#1", icon: "♛" },
@@ -20,7 +21,7 @@ export default function Leaderboard() {
   const tebakLaguId = searchParams.get("tebak_lagu_id") || 0;
 
   useEffect(() => {
-    fetch("/api/dapatkan_tebak_lagu.php")
+    fetch(apiUrl("/dapatkan_tebak_lagu.php"))
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -32,7 +33,7 @@ export default function Leaderboard() {
 
   useEffect(() => {
     setLoading(true);
-    const url = `/api/dapatkan_leaderboard.php?tebak_lagu_id=${tebakLaguId}`;
+    const url = apiUrl(`/dapatkan_leaderboard.php?tebak_lagu_id=${tebakLaguId}`);
     fetch(url)
       .then((r) => r.json())
       .then((data) => {

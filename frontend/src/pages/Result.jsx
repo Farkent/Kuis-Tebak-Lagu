@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import NotificationPopup from "../components/NotificationPopup";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { apiUrl } from "../api";
 
 const GENRE_COLORS = ["#FFE600", "#FF2D78", "#00E5FF", "#B8FF57", "#FF7A00", "#C084FC"];
 
@@ -61,7 +62,7 @@ export default function Result() {
     
     setLoading(true);
     
-    fetch("/api/simpan_hasil.php", {
+    fetch(apiUrl("/simpan_hasil.php"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 

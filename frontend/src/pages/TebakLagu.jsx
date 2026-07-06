@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import NotificationPopup from "../components/NotificationPopup";
+import { apiUrl } from "../api";
 
 const MAX_CORRECTION_TIME = 30; // Max 30 detik untuk audio correction
 
@@ -56,7 +57,7 @@ export default function TebakLagu() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resLagu = await fetch(`/api/dapatkan_lagu.php?tebak_lagu_id=${tebakLaguId}`);
+        const resLagu = await fetch(apiUrl(`/dapatkan_lagu.php?tebak_lagu_id=${tebakLaguId}`));
         const dataLagu = await resLagu.json();
 
         // Acak urutan soal
@@ -69,7 +70,7 @@ export default function TebakLagu() {
         );
         setShuffledAnswers(answersPerSong);
 
-        const resCat = await fetch(`/api/dapatkan_tebak_lagu.php`);
+        const resCat = await fetch(apiUrl(`/dapatkan_tebak_lagu.php`));
         const dataCat = await resCat.json();
         const cat = dataCat.find((item) => String(item.id) === String(tebakLaguId));
         if (cat) setTitle(cat.title);

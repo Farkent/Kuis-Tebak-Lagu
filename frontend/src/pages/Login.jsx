@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import NotificationPopup from "../components/NotificationPopup";
+import { apiUrl } from "../api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export default function Login() {
       return;
     }
     setLoading(true);
-    fetch("/api/login.php", {
+    fetch(apiUrl("/login.php"), {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -47,7 +48,7 @@ export default function Login() {
   };
 
   useEffect(() => {
-    fetch("/api/is_admin.php", { credentials: "include" })
+    fetch(apiUrl("/is_admin.php"), { credentials: "include" })
       .then((res) => res.json())
       .then((data) => { if (data.authenticated) navigate("/admin/dashboard"); })
       .catch(() => {});
