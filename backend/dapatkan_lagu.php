@@ -13,6 +13,7 @@ if ($tebak_lagu_id <= 0) {
 $sql = "SELECT
             l.id AS lid,
             l.judul_lagu,
+            l.artis,
             l.lirik,
             l.deezer_track_id,
             l.genre_id,
@@ -91,6 +92,7 @@ while ($row = $result->fetch_assoc()) {
         $lagu[] = [
             "id" => intval($row["lid"]),
             "judul_lagu" => $row["judul_lagu"] ?? "",
+            "artis" => $row["artis"] ?? "",
             "lirik" => $row["lirik"],
             "deezer_track_id" => $trackId,
             "preview_url" => $preview,

@@ -8,7 +8,7 @@ import ConfirmationDialog from "../components/ConfirmationDialog";
 import { apiUrl } from "../api";
 
 const emptySong = {
-  lagu_id: 0, judul_lagu: "", lirik: "", deezer_track_id: 0, preview_url: "", genre_id: "",
+  lagu_id: 0, judul_lagu: "", artis: "", lirik: "", deezer_track_id: 0, preview_url: "", genre_id: "",
   jawaban: [
     { id: 0, jawaban_text: "", is_correct: false },
     { id: 0, jawaban_text: "", is_correct: false },
@@ -365,7 +365,7 @@ export default function Admin() {
     if (!editingSong.genre_id) return showNotification("ERROR: Pilih genre terlebih dahulu!", "error");
     if (!editingSong.deezer_track_id) return showNotification("ERROR: Pilih lagu dari Deezer terlebih dahulu!", "error");
     const isEdit = editingSong.lagu_id !== 0;
-    const payload = { lagu_id: editingSong.lagu_id, tebak_lagu_id: selectedCategoryId, judul_lagu: editingSong.judul_lagu || "", lirik: editingSong.lirik, deezer_track_id: editingSong.deezer_track_id, preview_url: editingSong.preview_url, genre_id: editingSong.genre_id, jawaban: editingSong.jawaban };
+    const payload = { lagu_id: editingSong.lagu_id, tebak_lagu_id: selectedCategoryId, judul_lagu: editingSong.judul_lagu || "", artis: editingSong.artis || "", lirik: editingSong.lirik, deezer_track_id: editingSong.deezer_track_id, preview_url: editingSong.preview_url, genre_id: editingSong.genre_id, jawaban: editingSong.jawaban };
     fetch(apiUrl("/simpan_lagu.php"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), credentials: "include" })
       .then((r) => r.json()).then((d) => {
         if (d.error) throw new Error(d.error);
@@ -405,9 +405,10 @@ export default function Admin() {
   };
 
   const selectDeezerTrack = (track) => {
-    const judulLagu = track.artist ? `${track.title} - ${track.artist}` : track.title;
-    setEditingSong({ ...editingSong, deezer_track_id: track.id, preview_url: track.preview_url, judul_lagu: judulLagu });
-    setSearchResults([]); setSearchQuery(""); showNotification(`LAGU DIPILIH: ${judulLagu}`, "success");
+    const judulLagu = track.title || "";
+    const artis = track.artist || "";
+    setEditingSong({ ...editingSong, deezer_track_id: track.id, preview_url: track.preview_url, judul_lagu: judulLagu, artis: artis });
+    setSearchResults([]); setSearchQuery(""); showNotification(`LAGU DIPILIH: ${judulLagu} - ${artis}`, "success");
   };
 
   const handleLogout = () => {
@@ -742,7 +743,7 @@ export default function Admin() {
                           <div className="flex gap-2 flex-shrink-0 ml-4">
                             <button
                               onClick={() => {
-                                setEditingSong({ lagu_id: s.id, judul_lagu: s.judul_lagu || "", lirik: s.lirik, deezer_track_id: s.deezer_track_id, preview_url: s.preview_url, genre_id: s.genre_id || "", jawaban: s.jawaban });
+                                setEditingSong({ lagu_id: s.id, judul_lagu: s.judul_lagu || "", artis: s.artis || "", lirik: s.lirik, deezer_track_id: s.deezer_track_id, preview_url: s.preview_url, genre_id: s.genre_id || "", jawaban: s.jawaban });
                                 setActiveTab("questions");
                               }}
                               className="text-xs font-black px-3 py-2 bg-white border-2 border-black hover:bg-[#00E5FF] transition-colors"
