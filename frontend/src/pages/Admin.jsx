@@ -8,7 +8,7 @@ import ConfirmationDialog from "../components/ConfirmationDialog";
 import { apiUrl } from "../api";
 
 const emptySong = {
-  lagu_id: 0, lirik: "", deezer_track_id: 0, preview_url: "", genre_id: "",
+  lagu_id: 0, judul_lagu: "", lirik: "", deezer_track_id: 0, preview_url: "", genre_id: "",
   jawaban: [
     { id: 0, jawaban_text: "", is_correct: false },
     { id: 0, jawaban_text: "", is_correct: false },
@@ -363,8 +363,9 @@ export default function Admin() {
   const saveSong = () => {
     if (!selectedCategoryId) return showNotification("ERROR: Pilih kategori terlebih dahulu!", "error");
     if (!editingSong.genre_id) return showNotification("ERROR: Pilih genre terlebih dahulu!", "error");
+    if (!editingSong.deezer_track_id) return showNotification("ERROR: Pilih lagu dari Deezer terlebih dahulu!", "error");
     const isEdit = editingSong.lagu_id !== 0;
-    const payload = { lagu_id: editingSong.lagu_id, tebak_lagu_id: selectedCategoryId, lirik: editingSong.lirik, deezer_track_id: editingSong.deezer_track_id, preview_url: editingSong.preview_url, genre_id: editingSong.genre_id, jawaban: editingSong.jawaban };
+    const payload = { lagu_id: editingSong.lagu_id, tebak_lagu_id: selectedCategoryId, judul_lagu: editingSong.judul_lagu || "", lirik: editingSong.lirik, deezer_track_id: editingSong.deezer_track_id, preview_url: editingSong.preview_url, genre_id: editingSong.genre_id, jawaban: editingSong.jawaban };
     fetch(apiUrl("/simpan_lagu.php"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), credentials: "include" })
       .then((r) => r.json()).then((d) => {
         if (d.error) throw new Error(d.error);
@@ -404,8 +405,9 @@ export default function Admin() {
   };
 
   const selectDeezerTrack = (track) => {
-    setEditingSong({ ...editingSong, deezer_track_id: track.id, preview_url: track.preview_url });
-    setSearchResults([]); setSearchQuery(""); showNotification("LAGU DIPILIH!", "success");
+    const judulLagu = track.artist ? `${track.title} - ${track.artist}` : track.title;
+    setEditingSong({ ...editingSong, deezer_track_id: track.id, preview_url: track.preview_url, judul_lagu: judulLagu });
+    setSearchResults([]); setSearchQuery(""); showNotification(`LAGU DIPILIH: ${judulLagu}`, "success");
   };
 
   const handleLogout = () => {
@@ -641,6 +643,13 @@ export default function Admin() {
                       </div>
                     )}
 
+                    {editingSong.deezer_track_id > 0 && (
+                      <div className="px-4 py-3 bg-[#B8FF57] border-4 border-black flex items-center gap-3">
+                        <span className="text-xs font-black uppercase tracking-widest text-black flex-shrink-0">✓ LAGU:</span>
+                        <span className="font-bold text-sm text-black truncate">{editingSong.judul_lagu || `Track ID: ${editingSong.deezer_track_id}`}</span>
+                      </div>
+                    )}
+
                     {editingSong.preview_url && (
                       <div className="p-4 bg-black border-4 border-black">
                         <p className="text-[#FFE600] text-xs font-black uppercase tracking-widest mb-2">// AUDIO PREVIEW</p>
@@ -733,7 +742,7 @@ export default function Admin() {
                           <div className="flex gap-2 flex-shrink-0 ml-4">
                             <button
                               onClick={() => {
-                                setEditingSong({ lagu_id: s.id, lirik: s.lirik, deezer_track_id: s.deezer_track_id, preview_url: s.preview_url, genre_id: s.genre_id || "", jawaban: s.jawaban });
+                                setEditingSong({ lagu_id: s.id, judul_lagu: s.judul_lagu || "", lirik: s.lirik, deezer_track_id: s.deezer_track_id, preview_url: s.preview_url, genre_id: s.genre_id || "", jawaban: s.jawaban });
                                 setActiveTab("questions");
                               }}
                               className="text-xs font-black px-3 py-2 bg-white border-2 border-black hover:bg-[#00E5FF] transition-colors"

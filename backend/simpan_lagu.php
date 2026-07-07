@@ -6,6 +6,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 $lagu_id = intval($data['lagu_id'] ?? 0);
 $tebak_lagu_id = intval($data['tebak_lagu_id'] ?? 0);
+$judul_lagu = trim($data['judul_lagu'] ?? '');
 $lirik = trim($data['lirik'] ?? '');
 $jawaban = $data['jawaban'] ?? [];
 $deezer_track_id = intval($data['deezer_track_id'] ?? 0);
@@ -29,6 +30,7 @@ try {
         $stmt = $conn->prepare("
             UPDATE lagu
             SET
+                judul_lagu = ?,
                 lirik = ?,
                 deezer_track_id = ?,
                 genre_id = ?
@@ -36,7 +38,8 @@ try {
         ");
 
         $stmt->bind_param(
-            "siii",
+            "ssiii",
+            $judul_lagu,
             $lirik,
             $deezer_track_id,
             $genre_id,
@@ -52,19 +55,21 @@ try {
             INSERT INTO lagu
             (
                 tebak_lagu_id,
+                judul_lagu,
                 lirik,
                 deezer_track_id,
                 genre_id
             )
             VALUES
             (
-                ?, ?, ?, ?
+                ?, ?, ?, ?, ?
             )
         ");
 
         $stmt->bind_param(
-            "isii",
+            "issii",
             $tebak_lagu_id,
+            $judul_lagu,
             $lirik,
             $deezer_track_id,
             $genre_id
