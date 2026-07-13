@@ -653,7 +653,7 @@ export default function Admin() {
 
                     {editingSong.preview_url && (
                       <div className="p-4 bg-black border-4 border-black">
-                        <p className="text-[#FFE600] text-xs font-black uppercase tracking-widest mb-2">// AUDIO PREVIEW</p>
+                        <p className="text-[#FFE600] text-xs font-black uppercase tracking-widest mb-2">AUDIO PREVIEW</p>
                         <audio controls className="w-full h-10">
                           <source src={editingSong.preview_url} type="audio/mpeg" />
                         </audio>

@@ -73,7 +73,7 @@ export default function Leaderboard() {
           {/* Sub info */}
           <div className="px-8 py-4 bg-black flex items-center justify-between flex-wrap gap-3">
             <span className="text-[#FFE600] font-black text-xs uppercase tracking-widest">
-              {tebakLaguTitle ? `// ${tebakLaguTitle.toUpperCase()}` : ""}
+              {tebakLaguTitle ? ` ${tebakLaguTitle.toUpperCase()}` : ""}
             </span>
             <span className="text-[#555] font-mono text-xs uppercase tracking-widest">
               {loading ? "LOADING..." : `${results.length} PEMAIN TERDAFTAR`}

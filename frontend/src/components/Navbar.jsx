@@ -25,7 +25,7 @@ export default function Navbar() {
             ♪
           </div>
           <span className="text-black font-black text-xl uppercase tracking-tighter font-mono">
-            GUESS<span className="text-[#FF2D78]">BEAT</span>
+            GUESS<span className="text-[#FF2D78]">THELYRICS</span>
           </span>
         </Link>
 

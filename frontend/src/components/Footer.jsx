@@ -11,7 +11,7 @@ export default function Footer() {
               style={{ boxShadow: "4px 4px 0px #000" }}
             >
               <span className="font-black text-2xl text-black tracking-tighter uppercase font-mono">
-                GUESS<span className="text-[#FF2D78]">BEAT.</span>
+                GUESS<span className="text-[#FF2D78]">THELYRICS.</span>
               </span>
             </div>
             <p className="text-[#aaa] text-sm font-bold font-mono uppercase tracking-wide leading-relaxed">
@@ -41,7 +41,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-[#555] font-mono text-xs uppercase tracking-widest font-bold">
-            © 2026 GUESSBEAT — ALL RIGHTS RESERVED
+            © 2026 GUESSTHELYRICS — ALL RIGHTS RESERVED
           </p>
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 bg-[#00E5FF] rounded-full animate-pulse" />

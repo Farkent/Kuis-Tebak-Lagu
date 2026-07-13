@@ -89,7 +89,7 @@ export default function Login() {
                 ♪
               </div>
               <div>
-                <p className="text-[#FFE600] font-black text-xs uppercase tracking-widest">GUESSBEAT SYSTEM</p>
+                <p className="text-[#FFE600] font-black text-xs uppercase tracking-widest">GUESSTHELYRICS SYSTEM</p>
                 <p className="text-[#888] font-mono text-xs">Moderator Access Portal v2.0</p>
               </div>
               <div className="ml-auto w-2 h-2 bg-[#B8FF57] rounded-full animate-pulse" />
@@ -98,7 +98,7 @@ export default function Login() {
             {/* Username */}
             <div className="mb-6">
               <label className="block text-xs font-black uppercase tracking-widest text-black mb-2">
-                USER_ID
+                USERNAME
               </label>
               <input
                 type="text"
@@ -155,7 +155,6 @@ export default function Login() {
             {/* Demo Hint */}
             <div className="mt-6 pt-4 border-t-2 border-[#eee]">
               <p className="text-center text-xs text-[#888] font-mono uppercase tracking-widest">
-                // DEMO: user=<span className="text-black font-black">admin</span> pass=<span className="text-black font-black">123</span>
               </p>
             </div>
           </div>

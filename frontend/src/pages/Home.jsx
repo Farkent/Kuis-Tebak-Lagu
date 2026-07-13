@@ -52,7 +52,7 @@ export default function Home() {
                 THE
               </span>
               <br />
-              <span className="text-[#FF2D78]">BEAT.</span>
+              <span className="text-[#FF2D78]">LYRICS.</span>
             </h1>
 
             <p className="text-black text-lg font-bold uppercase tracking-wide mb-8 max-w-md border-l-4 border-black pl-4">
@@ -81,9 +81,9 @@ export default function Home() {
           <div className="flex flex-col gap-4 lg:ml-auto lg:max-w-sm w-full">
             {/* Stat Block */}
             {[
-              { label: "TOP SCORE", value: "2500 PTS", color: "#FF2D78" },
-              { label: "TOTAL SOAL", value: "100+ LAGU", color: "#00E5FF" },
-              { label: "TRENDING", value: "POP GENRE", color: "#B8FF57" },
+              { label: "TOP SCORE", value: "AYO MAINKAN DAN DAPATKAN SKOR TERBAIK", color: "#FF2D78" },
+              { label: "TOTAL SOAL", value: "10 LAGU", color: "#00E5FF" },
+              { label: "TRENDING", value: "POP", color: "#B8FF57" },
             ].map((s) => (
               <div
                 key={s.label}
