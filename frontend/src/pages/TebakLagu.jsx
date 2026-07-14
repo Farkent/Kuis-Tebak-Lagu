@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import NotificationPopup from "../components/NotificationPopup";
+import ConfirmationDialog from "../components/ConfirmationDialog";
 import { apiUrl } from "../api";
 
 const MAX_CORRECTION_TIME = 30; // Max 30 detik untuk audio correction
@@ -29,6 +30,7 @@ export default function TebakLagu() {
   const [audioEnded, setAudioEnded] = useState(false);
   const [notification, setNotification] = useState({ show: false, message: "", type: "success" });
   const [shuffledAnswers, setShuffledAnswers] = useState([]); // jawaban teracak per soal
+  const [showExitDialog, setShowExitDialog] = useState(false);
   const audioVolumeRef = useRef(1);
 
   const showNotification = (msg, type = "success") => {
@@ -49,6 +51,46 @@ export default function TebakLagu() {
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled;
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  // EFFECT: Cegah keluar halaman kuis (browser back / tab close)
+  // ═══════════════════════════════════════════════════════════════
+  useEffect(() => {
+    // Push dummy state so back button is interceptable
+    window.history.pushState(null, "", window.location.href);
+
+    const handlePopState = () => {
+      // Push again to prevent actual navigation
+      window.history.pushState(null, "", window.location.href);
+      setShowExitDialog(true);
+    };
+
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  const handleExitConfirm = () => {
+    setShowExitDialog(false);
+    // Stop audio sebelum keluar
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    navigate("/");
+  };
+
+  const handleExitCancel = () => {
+    setShowExitDialog(false);
   };
 
   // ═══════════════════════════════════════════════════════════════
@@ -266,6 +308,18 @@ export default function TebakLagu() {
     <div className="min-h-screen bg-[#F5F5F0] font-mono">
       <Navbar />
 
+      {/* Exit Confirmation Dialog */}
+      <ConfirmationDialog
+        show={showExitDialog}
+        title="Tinggalkan Kuis?"
+        message="Apakah anda ingin meninggalkan kuis? Progress dan skor anda tidak akan disimpan."
+        confirmText="YA, KELUAR"
+        cancelText="LANJUT KUIS"
+        isDangerous={true}
+        onConfirm={handleExitConfirm}
+        onCancel={handleExitCancel}
+      />
+
       {/* Notification Popup - Centered */}
       <NotificationPopup
         show={notification.show}
@@ -306,7 +360,7 @@ export default function TebakLagu() {
           ))}
         </div>
 
-        {/* ─── PROGRESS ─── */}
+        {/* ─── PROGRESS + EXIT BUTTON ─── */}
         <div className="bg-white border-4 border-black p-4 mb-6 flex items-center gap-4" style={{ boxShadow: "4px 4px 0px #000" }}>
           <div>
             <p className="text-xs font-black uppercase tracking-widest text-[#888]">{title}</p>
@@ -320,6 +374,15 @@ export default function TebakLagu() {
               />
             </div>
           </div>
+          {/* Exit Quiz Button */}
+          <button
+            onClick={() => setShowExitDialog(true)}
+            className="ml-auto flex-shrink-0 border-4 border-black px-4 py-2 font-black text-xs uppercase tracking-widest transition-all duration-100 hover:-translate-y-0.5 hover:-translate-x-0.5 active:translate-y-0 active:translate-x-0"
+            style={{ background: "#FF2D78", color: "white", boxShadow: "4px 4px 0px #000" }}
+            title="Keluar dari kuis"
+          >
+            ✕ KELUAR
+          </button>
         </div>
 
         {/* ─── LYRIC PANEL ─── */}
