@@ -1,4 +1,4 @@
-﻿// NotificationPopup.jsx - NEOBRUTALISM (Portal: selalu di tengah layar device)
+// NotificationPopup.jsx - NEOBRUTALISM (Portal: selalu di tengah layar device)
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
@@ -51,9 +51,10 @@ export default function NotificationPopup({
 
   useEffect(() => {
     if (!show) return;
-    const timer = setTimeout(onClose, 4000);
+    const duration = type === "success" ? 6000 : 4000;
+    const timer = setTimeout(onClose, duration);
     return () => clearTimeout(timer);
-  }, [show, onClose]);
+  }, [show, onClose, type]);
 
   if (!show) return null;
 

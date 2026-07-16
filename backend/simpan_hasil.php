@@ -13,9 +13,16 @@ if (!$nama || $tebak_lagu_id <= 0) {
     exit;
 }
 
-// Validasi nama unik: setidaknya harus mengandung angka atau simbol unik
+// Validasi nama unik:
+// - Wajib mengandung minimal 1 huruf (a-z / A-Z)
+// - Wajib mengandung minimal 1 angka (0-9) ATAU simbol (_ atau *)
+// - Tidak boleh hanya angka saja atau huruf saja
+if (!preg_match('/[a-zA-Z]/', $nama)) {
+    echo json_encode(["error" => "Nama harus mengandung minimal 1 huruf! Contoh: CHANDRA_01 atau MUSIK*99"]);
+    exit;
+}
 if (!preg_match('/[0-9_*]/', $nama)) {
-    echo json_encode(["error" => "Masukkan nama dengan kode unik (angka atau simbol seperti _ atau *). Contoh: CHANDRA_01"]);
+    echo json_encode(["error" => "Nama harus dikombinasikan dengan angka atau simbol (_ atau *)! Contoh: CHANDRA_01 atau MUSIK*99"]);
     exit;
 }
 

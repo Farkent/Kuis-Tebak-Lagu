@@ -45,18 +45,27 @@ export default function Result() {
     if (!state || !state.tebakLaguId) navigate("/");
   }, [navigate, state]);
 
+  // Validasi format username:
+  // - Wajib mengandung minimal 1 huruf (a-z atau A-Z)
+  // - Wajib mengandung minimal 1 angka (0-9) ATAU simbol unik (_ atau *)
+  // - Tidak boleh hanya angka saja, simbol saja, atau huruf saja
+  const validateUsername = (name) => {
+    if (!name) return { valid: false, msg: "Nama tidak boleh kosong!" };
+    if (name.length < 3) return { valid: false, msg: "Nama minimal 3 karakter!" };
+    const hasLetter = /[a-zA-Z]/.test(name);
+    const hasNumberOrSymbol = /[0-9_*]/.test(name);
+    if (!hasLetter) return { valid: false, msg: "Nama harus mengandung minimal 1 huruf! Contoh: CHANDRA_01" };
+    if (!hasNumberOrSymbol) return { valid: false, msg: "Nama harus dikombinasikan dengan angka atau simbol (_ atau *)! Contoh: CHANDRA_01 atau MUSIK*99" };
+    return { valid: true, msg: "" };
+  };
+
   const saveResult = () => {
     const trimmedName = nama.trim();
     
-    // Validasi nama kosong
-    if (!trimmedName) { 
-      showNotification("ERROR: Masukkan nama dulu!", "error"); 
-      return; 
-    }
-    
-    // Validasi nama unik (harus ada angka atau simbol)
-    if (!/[_*0-9]/.test(trimmedName)) {
-      showNotification("ERROR: Nama harus mengandung angka atau simbol unik (_ atau *)!", "error");
+    // Validasi format username
+    const validation = validateUsername(trimmedName);
+    if (!validation.valid) {
+      showNotification(`⚠ FORMAT SALAH: ${validation.msg}`, "error");
       return;
     }
     
@@ -84,7 +93,7 @@ export default function Result() {
         
         // ❌ Error response (ada field 'error')
         if (data.error) {
-          showNotification(`ERROR: ${data.error}`, "error");
+          showNotification(`⚠ ${data.error}`, "error");
           setSubmitted(false);
           return;
         }
@@ -92,7 +101,7 @@ export default function Result() {
         // ⚠️ Success tapi skor tidak diganti (skor lama lebih tinggi)
         if (data.success === true && data.updated === false) {
           showNotification(
-            `SKOR TIDAK DIGANTI: Skor sebelumnya (${data.previous}) lebih tinggi!`,
+            `ℹ SKOR TIDAK DIPERBARUI! Skor sebelumnya (${data.previous} pts) lebih tinggi dari skor sekarang.`,
             "warning"
           );
           setSubmitted(true);
@@ -102,7 +111,7 @@ export default function Result() {
         // ✅ Success - skor tersimpan atau diperbarui
         if (data.success === true && data.updated === true) {
           showNotification(
-            "✓ SKOR TERSIMPAN! MASUK LEADERBOARD!",
+            `🎉 SKOR BERHASIL DISIMPAN! ${trimmedName} telah masuk ke leaderboard dengan skor ${scoreAkhir} pts!`,
             "success"
           );
           setSubmitted(true);
@@ -112,7 +121,7 @@ export default function Result() {
         // Default success (jika response.success = true tapi tidak ada updated field)
         if (data.success === true) {
           showNotification(
-            "✓ SKOR TERSIMPAN! MASUK LEADERBOARD!",
+            `🎉 SKOR BERHASIL DISIMPAN! ${trimmedName} telah masuk ke leaderboard!`,
             "success"
           );
           setSubmitted(true);
@@ -206,10 +215,20 @@ export default function Result() {
                 value={nama}
                 onChange={(e) => setNama(e.target.value)}
                 disabled={submitted}
-                placeholder="Contoh: CHANDRA_01 atau CHANDRA*9"
+                placeholder="Contoh: CHANDRA_01 atau MUSIK*99"
                 onKeyPress={(e) => e.key === "Enter" && !loading && saveResult()}
                 className="w-full px-4 py-4 bg-[#F5F5F0] border-4 border-black font-black text-black text-sm outline-none focus:bg-[#FFE600] transition-colors disabled:opacity-40 placeholder:font-normal placeholder:text-[#bbb]"
               />
+              {/* Format hints */}
+              <div className="mt-3 border-4 border-black bg-[#1a1a1a] px-4 py-3" style={{ boxShadow: "3px 3px 0px #FFE600" }}>
+                <p className="text-[#FFE600] font-black text-[10px] uppercase tracking-widest mb-2">⚠ FORMAT NAMA WAJIB:</p>
+                <div className="space-y-1">
+                  <p className="text-[#B8FF57] font-mono text-[10px]">✓ Huruf + Angka → CHANDRA01, GITAR77</p>
+                  <p className="text-[#B8FF57] font-mono text-[10px]">✓ Huruf + Simbol → CHANDRA_X, MUSIK*99</p>
+                  <p className="text-[#FF2D78] font-mono text-[10px]">✕ Huruf saja → CHANDRA (tidak valid)</p>
+                  <p className="text-[#FF2D78] font-mono text-[10px]">✕ Angka saja → 12345 (tidak valid)</p>
+                </div>
+              </div>
             </div>
 
             <button
@@ -224,10 +243,6 @@ export default function Result() {
             >
               {loading ? "MENYIMPAN..." : submitted ? "✓ TERSIMPAN!" : "→ SIMPAN SKOR"}
             </button>
-
-            <p className="text-[10px] sm:text-xs uppercase tracking-widest text-[#555] mt-3">
-              Gunakan angka atau simbol unik (_ atau *) untuk menghindari nama yang sama.
-            </p>
           </div>
 
           {/* Action Buttons */}
